@@ -42,12 +42,19 @@ bool Bord::isposible(Piece** bord, int x, int y, int position) {
         }
        else if((x == 0 || listPieces[position].left == bord[x - 1][y].right) &&
             (y == 0 || listPieces[position].top == bord[x][y - 1].bot )) {
-//uniformiser la couleur de bord 
-                if(x==0) return listPieces[position].left==bordcolor ;
-                if(x==col-1) return listPieces[position].right==bordcolor ;
-                if(y==0) return listPieces[position].top==bordcolor ;
-                if(y==col-1) return listPieces[position].bot==bordcolor ;
-                else return true;        
+    //uniformiser la couleur de bord 
+                if(x==0 && y!=col-1 ) return listPieces[position].left==bordcolor ;
+
+                else if(x==col-1 && y !=col-1) return listPieces[position].right==bordcolor ;
+                else if(y==0 && x!=col-1) return listPieces[position].top==bordcolor ;
+                else if (y==col-1 && x!=col-1) return listPieces[position].bot==bordcolor ;
+                    //last angle 
+                else if((x==col-1) && (y==col-1)) return (listPieces[position].right==bordcolor && listPieces[position].bot==bordcolor) ;
+                    //second angle 
+                else   if(x==0 && y==col-1) return (listPieces[position].left==bordcolor && listPieces[position].bot==bordcolor) ;
+                    //third one clear
+                else  if(y==0 && x==col-1 ) return listPieces[position].top==bordcolor  && listPieces[position].right==bordcolor;
+                    else return true;        
                 }
         /*    if(x>0)  cout<<  listPieces[position].top << "  haut"<< bord[x - 1][y].bot << " bas " << y << endl;
            if(y>0)   cout <<  listPieces[position].left << " g " <<bord[x][y - 1].right  <<"d   " << x <<endl;
@@ -114,7 +121,7 @@ void Bord::display(Piece** bord) {
 
 int main() {
     //const char* filena = "Puzzle5*5.txt";
-  const char* filena = "fichier44.txt";
+  const char* filena = "Puzzle_6*6.txt";
     Bord b(filena);
     cout << endl;
    cout << b.sequentielle(0, 0) << endl;
