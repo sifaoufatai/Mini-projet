@@ -3,9 +3,15 @@
 #include "Bord.h"
 #include "Piece.h"
 #include <vector>
+#include <thread>
+#include"Pipeline.h"
+
+#include <chrono>
+
 using namespace std;
 char bordcolor;
 /*important on admet que x reprente les collonne et y les ligne */
+//mon parcout du plateau se feras par les collonne 
 Bord::Bord(const char* filename) {
     char top, left, bot, right;
     ifstream file(filename);
@@ -35,7 +41,10 @@ bool Bord::isposible(Piece** bord, int x, int y, int position) {
         if(x==0 && y==0){
             if (listPieces[position].left==listPieces[position].top){
                 bordcolor=listPieces[position].left;
-                cout<< bordcolor << endl;
+                //fix the color bord 
+
+
+               // cout<< bordcolor << endl;
                 return true;
             }
             return false ;
@@ -56,11 +65,7 @@ bool Bord::isposible(Piece** bord, int x, int y, int position) {
                 else  if(y==0 && x==col-1 ) return listPieces[position].top==bordcolor  && listPieces[position].right==bordcolor;
                     else return true;        
                 }
-        /*    if(x>0)  cout<<  listPieces[position].top << "  haut"<< bord[x - 1][y].bot << " bas " << y << endl;
-           if(y>0)   cout <<  listPieces[position].left << " g " <<bord[x][y - 1].right  <<"d   " << x <<endl;
-           else if(x==0) cout <<  listPieces[position].left << " g " <<bord[x][y - 1].right  <<"d "<< y <<endl;
-           else  cout<<  listPieces[position].top << "  haut"<< bord[x - 1][y].bot << " bas " << x << endl;*/
-            
+      
         }
     return false;
 
@@ -119,11 +124,45 @@ void Bord::display(Piece** bord) {
     }
 }
 
+
+
+
+
+
+void swap(std::vector<Piece>& liste, int indice) {
+    if (indice >= 0 && indice < liste.size()) {
+        Piece piece = liste[indice];  
+        liste.erase(liste.begin() + indice);  
+        liste.push_back(piece);  
+    }
+}
+
+
+
 int main() {
-    //const char* filena = "Puzzle5*5.txt";
-  const char* filena = "Puzzle_6*6.txt";
-    Bord b(filena);
-    cout << endl;
-   cout << b.sequentielle(0, 0) << endl;
+   
+
+auto start = std::chrono::high_resolution_clock::now();
+
+//const char* filena = "Puzzle_6*6.txt";
+ 
+const char* filena="fichier44.txt";
+Bord b(filena);  
+//b.sequentielle(0, 0);
+    Pipeline pipeline(b); // Créez un objet Pipeline avec votre objet Bord
+
+    pipeline.startpipeline();
+
+//b.startpipeline();
+
+
+auto end = std::chrono::high_resolution_clock::now();
+auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+
+int minutes = duration.count() / 60;
+int seconds = duration.count() % 60;
+
+std::cout << "Temps d'exécution : " << minutes << " minutes et " << seconds << " secondes" << std::endl;
+
     return 0;
 }
